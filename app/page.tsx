@@ -17,10 +17,12 @@ export default function Home() {
 }
 
 const Calories = () => {
-  const [ratio, setRatio] = React.useState(0);
-  const [protenPercent, setProtenPercent] = React.useState(0);
-  const [tc, setTC] = React.useState(0);
-  const [pg, setPG] = React.useState(0);
+  const [ratio, setRatio] = React.useState();
+  const [pp, setPPInner] = React.useState();
+  const [ppReason, setPPReason] = React.useState();
+  const [tc, setTC] = React.useState();
+  const [pg, setPG] = React.useState();
+  const setPP = (value: number, reason: string) => {setPPInner(value); setPPReason(reason)};
   const calcRatio = (): number => tc / pg;
   const GRAM_OF_PROTEIN_CALORIES = 4;
   const calcProtenPercent = (): number => ((pg * GRAM_OF_PROTEIN_CALORIES) / tc) * 100;
@@ -30,7 +32,7 @@ const Calories = () => {
       action: calcRatio, setter: setRatio, toFixed: 2
     },
     {
-      action: calcProtenPercent, setter: setProtenPercent, toFixed: 0
+      action: calcProtenPercent, setter: (value) => setPP(value, 'auto'), toFixed: 0
     }
   ];
 
@@ -38,18 +40,29 @@ const Calories = () => {
     calcs.forEach(({ action, setter, toFixed }) => setter(action().toFixed(toFixed)));
   }, [tc, pg]);
 
+  useEffect(() => {
+    calcs.forEach(({ action, setter, toFixed }) => setter(action().toFixed(toFixed)));
+  }, [tc, pg]);
+
+  useEffect(() => {
+    // to listen to reason of change - user input or auto calc
+    if (ppReason === 'userInputChange') setRatio(400 / pp)
+  }, [pp]);
+
   const onTCChange = (e: React.ChangeEvent<HTMLInputElement>): void => setTC(e.target.value);
   const onPGChange = (e: React.ChangeEvent<HTMLInputElement>): void => setPG(e.target.value);
+  const onPPChange = (e: React.ChangeEvent<HTMLInputElement>): void => setPP(e.target.value, 'userInputChange');
 
   return (
     <>
       <div>Total Calories</div>
-      <input value={tc} onChange={onTCChange} type="number" placeholder="Enter the Total Calories of the food" />
-      <input value={pg} onChange={onPGChange} type="number" placeholder="Enter the Total Protein of the food" />
+      <input value={tc} onChange={onTCChange} type="text" placeholder="Total Calories of the food" />
+      <input value={pg} onChange={onPGChange} type="text" placeholder="Protein Grams" />
+      <input value={pp} onChange={onPPChange} type="percent" placeholder="Protein %" />%
       <span>ratio</span>
       <span>{ratio}</span>
       <span>protein percent per calories</span>
-      <span>{protenPercent}%</span>
+      <span>{pp}%</span>
 
       <div>Total Protein in Grams</div>
     </>

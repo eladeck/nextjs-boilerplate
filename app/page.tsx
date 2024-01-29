@@ -27,7 +27,7 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      Elad's website
+      Elads website
       <Counter />
       {/* render here the same example with actions and counter */}
     </main>

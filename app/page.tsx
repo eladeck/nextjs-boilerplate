@@ -1,38 +1,83 @@
 'use client'
 import Image from "next/image";
-import React from 'react'
+import React, { useEffect } from 'react'
+
+
 
 export default function Home() {
-  const [count, setCount] = React.useState(0);
-  //create the actions
-  const increment = () => setCount(count + 1);
-  const decrement = () => setCount(count - 1);
-  const reset = () => setCount(0);
-  //create the counter
-  const Counter = () => (
-    <>
-      <button
-        onClick={decrement}
-      >
-        dec
-      </button>
-      <span className="text-2xl font-bold">{count}</span>
-      <button
-        onClick={increment}
-        >
-        inc
-      </button>
-    </>
-  );
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       Elads website
-      <Counter />
+      <Calories />
+      {/* <Counter /> */}
       {/* render here the same example with actions and counter */}
     </main>
   );
 }
+
+const Calories = () => {
+  const [ratio, setRatio] = React.useState(0);
+  const [protenPercent, setProtenPercent] = React.useState(0);
+  const [tc, setTC] = React.useState(0);
+  const [pg, setPG] = React.useState(0);
+  const calcRatio = (): number => tc / pg;
+  const GRAM_OF_PROTEIN_CALORIES = 4;
+  const calcProtenPercent = (): number => ((pg * GRAM_OF_PROTEIN_CALORIES) / tc) * 100;
+
+  const calcs = [
+    {
+      action: calcRatio, setter: setRatio, toFixed: 2
+    },
+    {
+      action: calcProtenPercent, setter: setProtenPercent, toFixed: 0
+    }
+  ];
+
+  useEffect(() => {
+    calcs.forEach(({ action, setter, toFixed }) => setter(action().toFixed(toFixed)));
+  }, [tc, pg]);
+
+  const onTCChange = (e: React.ChangeEvent<HTMLInputElement>): void => setTC(e.target.value);
+  const onPGChange = (e: React.ChangeEvent<HTMLInputElement>): void => setPG(e.target.value);
+
+  return (
+    <>
+      <div>Total Calories</div>
+      <input value={tc} onChange={onTCChange} type="number" placeholder="Enter the Total Calories of the food" />
+      <input value={pg} onChange={onPGChange} type="number" placeholder="Enter the Total Protein of the food" />
+      <span>ratio</span>
+      <span>{ratio}</span>
+      <span>protein percent per calories</span>
+      <span>{protenPercent}%</span>
+
+      <div>Total Protein in Grams</div>
+    </>
+  )
+}
+
+const Counter = () => {
+  const [count, setCount] = React.useState(0);
+  const increment = () => setCount(count + 1);
+  const decrement = () => setCount(count - 1);
+  const reset = () => setCount(0);
+
+  return (
+    <>
+      <button
+        onClick={decrement}
+      >
+        deccc
+      </button>
+      <span className="text-2xl font-bold">{count}</span>
+      <button
+        onClick={increment}
+      >
+        incc
+      </button>
+    </>
+  )
+};
 
 // original inside-main-tag content
 /* 
@@ -44,7 +89,7 @@ export default function Home() {
         <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
           <a
             className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
+            href="htpgs://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -74,7 +119,7 @@ export default function Home() {
 
       <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
         <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
+          href="htpgs://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
           className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
           target="_blank"
           rel="noopener noreferrer"
@@ -91,7 +136,7 @@ export default function Home() {
         </a>
 
         <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+          href="htpgs://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
           className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
           target="_blank"
           rel="noopener noreferrer"
@@ -108,7 +153,7 @@ export default function Home() {
         </a>
 
         <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
+          href="htpgs://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
           className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
           target="_blank"
           rel="noopener noreferrer"
@@ -125,7 +170,7 @@ export default function Home() {
         </a>
 
         <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
+          href="htpgs://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
           className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
           target="_blank"
           rel="noopener noreferrer"
